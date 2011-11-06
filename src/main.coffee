@@ -2,7 +2,7 @@ appIds = [
   "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
 ]
 
-# Display a coverflow to select the app to launch
+# Display a coverflow or grid to select the app to launch
 
 chrome.management.get appIds[0], ({icons}) ->
   icons.each (iconInfo) ->
