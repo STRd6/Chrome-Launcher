@@ -6,6 +6,9 @@
       "local_path": "webstore/main.html"
     }
   },
+  "permissions": [
+    "management"
+  ],
   "version": "0.0.4",
   "icons": {
     "128": "webstore/images/icon_128.png",
