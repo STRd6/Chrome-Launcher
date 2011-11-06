@@ -4,8 +4,8 @@ Grid = (I={}) ->
     columns: 4
     height: App.height
     width: App.width
-    x: 0
-    y: 0
+    x: App.width/2
+    y: App.height/2
     color: "rgba(0, 128, 0, 0.5)"
     cursor: Point(0, 0)
 
@@ -54,6 +54,9 @@ Grid = (I={}) ->
     row = (i / I.columns).floor()
     x = column * itemSize
     y = row * itemSize
+
+    item.I.x = x + itemSize/2
+    item.I.y = y + itemSize/2
 
   # We must always return self as the last line
   return self
