@@ -23,7 +23,7 @@ LaunchableApp = (I={}) ->
         radius: 2
         color: "red"
 
-    I.sprite.draw(canvas, -I.sprite.width/2, -I.sprite.height/2)
+    I.sprite.draw(canvas, 0, 0)
 
 
   self.attrAccessor "selected"
