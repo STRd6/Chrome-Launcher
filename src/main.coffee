@@ -1,5 +1,16 @@
 appIds = [
   "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
 ]
 
 window.engine = Engine 
@@ -12,7 +23,7 @@ launchableApps = appIds.map (appId) ->
     id: appId
 
 # Display a coverflow or grid to select the app to launch
-engine.add
+grid = engine.add
   class: "Grid"
   items: launchableApps
 
@@ -24,4 +35,9 @@ chrome.management?.get appIds[0], ({icons}) ->
 
 $(document).bind "keydown", "return", ->
   chrome.management.launchApp(appIds[0])
+
+["left", "right", "up", "down"].each (direction) ->
+  $(document).bind "keydown", direction, ->
+    grid.trigger "moveCursor", Point[direction.toUpperCase()]
+
 
