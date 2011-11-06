@@ -55,9 +55,6 @@ Grid = (I={}) ->
     x = column * itemSize
     y = row * itemSize
 
-    item.I.x = x + itemSize/2
-    item.I.y = y + itemSize/2
-
   # We must always return self as the last line
   return self
 
