@@ -45,7 +45,7 @@ Grid = (I={}) ->
       item.draw(canvas)
 
   self.bind "moveCursor", (direction) ->
-    cursor = cursor.add(direction)
+    I.cursor = I.cursor.add(direction)
 
   I.items.each (item, i) ->
     itemSize = I.width / I.columns
