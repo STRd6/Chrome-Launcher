@@ -6,6 +6,7 @@ Grid = (I={}) ->
     width: App.width
     x: 0
     y: 0
+    color: "rgba(0, 128, 0, 0.5)"
 
   I.items ||= []
 
@@ -15,6 +16,9 @@ Grid = (I={}) ->
   self.unbind "draw"
 
   self.bind "draw", (canvas) ->
+    canvas.drawRect
+      I
+
     itemSize = I.width / I.columns
 
     I.items.each (item, i) ->
