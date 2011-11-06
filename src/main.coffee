@@ -8,9 +8,6 @@ appIds = [
   ""
   ""
   ""
-  ""
-  ""
-  ""
 ]
 
 window.engine = Engine 
