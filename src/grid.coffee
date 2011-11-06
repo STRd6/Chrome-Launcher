@@ -32,8 +32,8 @@ Grid = (I={}) ->
 
     itemSize = I.width / I.columns
 
-    cursorRow = I.cursor.y % rows()
-    cursorColumn = I.cursor.x % columns()
+    cursorRow = I.cursor.y.mod(rows())
+    cursorColumn = I.cursor.x.mod(columns())
 
     I.items.each (item, i) ->
       column = i % I.columns
