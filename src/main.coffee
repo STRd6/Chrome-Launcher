@@ -7,9 +7,16 @@ window.engine = Engine
   canvas: $("canvas").pixieCanvas()
   includedModules: ["Flash"]
 
-# Display a coverflow or grid to select the app to launch
+launchableApps = appIds.map (appId) ->
+  LaunchableApp
+    id: appId
 
-chrome.management.get appIds[0], ({icons}) ->
+# Display a coverflow or grid to select the app to launch
+engine.add
+  class: "Grid"
+  items: launchableApps
+
+chrome.management?.get appIds[0], ({icons}) ->
   icons.each (iconInfo) ->
     console.log iconInfo
 
