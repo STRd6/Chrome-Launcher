@@ -40,4 +40,3 @@ $(document).bind "keydown", "return", ->
   $(document).bind "keydown", direction, ->
     grid.trigger "moveCursor", Point[direction.toUpperCase()]
 
-
