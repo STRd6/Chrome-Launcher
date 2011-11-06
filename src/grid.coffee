@@ -4,8 +4,8 @@ Grid = (I={}) ->
     columns: 4
     height: App.height
     width: App.width
-    x: App.width/2
-    y: App.height/2
+    x: 0
+    y: 0
     color: "rgba(0, 128, 0, 0.5)"
     cursor: Point(0, 0)
 
