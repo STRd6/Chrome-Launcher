@@ -43,7 +43,9 @@ Grid = (I={}) ->
       I.cursor = Point(selectedIndex.mod(columns()), (selectedIndex / columns()).floor())
 
   self.bind "launchApp", ->
-    chrome.management.launchApp(appIds[0])
+    appId = selectedItem.I.id
+    alert("launch: #{appId}")
+    chrome.management.launchApp(appId)
 
   I.items.each (item, i) ->
     itemSize = I.width / I.columns
