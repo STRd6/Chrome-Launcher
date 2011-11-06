@@ -23,29 +23,25 @@ Grid = (I={}) ->
   self.unbind "draw"
 
   self.bind "draw", (canvas) ->
-    canvas.drawRect
-      x: 0
-      y: 0
-      width: I.width
-      height: I.height
-      color: I.color
-
-    itemSize = I.width / I.columns
-
-    cursorRow = I.cursor.y.mod(rows())
-    cursorColumn = I.cursor.x.mod(columns())
-
-    I.items.each (item, i) ->
-      column = i % I.columns
-      row = (i / I.columns).floor()
-      x = column * itemSize
-      y = row * itemSize
-
-      item.selected(column is cursorColumn and row is cursorRow)
+    I.items.each (item) ->
       item.draw(canvas)
 
   self.bind "moveCursor", (direction) ->
-    I.cursor = I.cursor.add(direction)
+    if I.items.length
+      I.cursor = I.cursor.add(direction)
+
+      selectedIndex = Math.min(I.items.length, I.cursor.x.mod(columns()) + I.cursor.y.mod(rows()) * I.columns)
+
+      previouslySelectedItem = selectedItem
+      selectedItem = I.items[selectedIndex]
+
+      selectedItem.select true
+      previouslySelectedItem?.select false
+
+      I.cursor = Point(selectedIndex.mod(columns()), (selectedIndex / columns()).floor())
+
+  self.bind "launchApp", ->
+    chrome.management.launchApp(appIds[0])
 
   I.items.each (item, i) ->
     itemSize = I.width / I.columns
