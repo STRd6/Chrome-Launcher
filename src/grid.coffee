@@ -44,7 +44,7 @@ Grid = (I={}) ->
 
   self.bind "launchApp", ->
     appId = selectedItem.I.id
-    alert("launch: #{appId}")
+
     chrome.management.launchApp(appId)
 
   I.items.each (item, i) ->
