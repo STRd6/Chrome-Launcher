@@ -28,10 +28,6 @@ grid = engine.add
 
 engine.start()
 
-chrome.management?.get appIds[0], ({icons}) ->
-  icons.each (iconInfo) ->
-    console.log iconInfo
-
 # Keybord Cursor Movement
 ["left", "right", "up", "down"].each (direction) ->
   pointDirection = Point[direction.toUpperCase()]
