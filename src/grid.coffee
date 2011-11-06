@@ -32,13 +32,13 @@ Grid = (I={}) ->
     if I.items.length
       I.cursor = I.cursor.add(direction)
 
-      selectedIndex = Math.min(I.items.length, I.cursor.x.mod(columns()) + I.cursor.y.mod(rows()) * I.columns)
+      selectedIndex = Math.min(I.items.length - 1, I.cursor.x.mod(columns()) + I.cursor.y.mod(rows()) * I.columns)
 
       previouslySelectedItem = selectedItem
       selectedItem = I.items[selectedIndex]
 
-      selectedItem.selected true
       previouslySelectedItem?.selected false
+      selectedItem.selected true
 
       I.cursor = Point(selectedIndex.mod(columns()), (selectedIndex / columns()).floor())
 
