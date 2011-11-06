@@ -11,5 +11,3 @@ chrome.management.get appIds[0], ({icons}) ->
 $(document).bind "keydown", "return", ->
   chrome.management.launchApp(appIds[0])
 
-x = "test"
-
