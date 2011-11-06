@@ -37,6 +37,11 @@ $(document).bind "keydown", "return", ->
   chrome.management.launchApp(appIds[0])
 
 ["left", "right", "up", "down"].each (direction) ->
+  pointDirection = Point[direction.toUpperCase()]
+
+  console.log pointDirection
+
   $(document).bind "keydown", direction, ->
-    grid.trigger "moveCursor", Point[direction.toUpperCase()]
+
+    grid.trigger "moveCursor", pointDirection
 
