@@ -4,12 +4,9 @@
   "app": {
     "launch": {
       "local_path": "webstore/main.html"
-    },
-    "permissions": [
-      "management"
-    ]
+    }
   },
-  "version": "0.0.3",
+  "version": "0.0.4",
   "icons": {
     "128": "webstore/images/icon_128.png",
     "96": "webstore/images/icon_96.png",
