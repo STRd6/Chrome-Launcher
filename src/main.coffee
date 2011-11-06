@@ -1,3 +1,5 @@
+MAX_JOYSTICKS = 8
+
 appIds = [
   "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
   ""
@@ -13,7 +15,7 @@ appIds = [
 window.engine = Engine 
   backgroundColor: 'black'
   canvas: $("canvas").pixieCanvas()
-  includedModules: ["Flash"]
+  includedModules: ["Joysticks"]
 
 launchableApps = appIds.map (appId) ->
   LaunchableApp
@@ -30,6 +32,7 @@ chrome.management?.get appIds[0], ({icons}) ->
   icons.each (iconInfo) ->
     console.log iconInfo
 
+# Keybord Cursor Movement
 ["left", "right", "up", "down"].each (direction) ->
   pointDirection = Point[direction.toUpperCase()]
 
@@ -38,4 +41,17 @@ chrome.management?.get appIds[0], ({icons}) ->
 
 $(document).bind "keydown", "return", ->
   grid.trigger "launchApp"
+
+# Joystick Cursor Movement
+MAX_JOYSTICKS.times (i) ->
+  controller = engine.controller(i)
+    .bind "tap", (pointDirection) ->
+      grid.trigger "moveCursor", pointDirection
+
+engine.bind "update", ->
+  MAX_JOYSTICKS.times (i) ->
+    controller = engine.controller(i)
+
+    if controller.justPressed "A", "START"
+      grid.trigger "launchApp"
 
