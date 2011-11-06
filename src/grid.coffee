@@ -10,6 +10,8 @@ Grid = (I={}) ->
     cursor: Point(0, 0)
 
   I.items ||= []
+  selectedItem = null
+  previouslySelectedItem = null
 
   rows = ->
     (I.items.length / I.columns).ceil()
@@ -35,8 +37,8 @@ Grid = (I={}) ->
       previouslySelectedItem = selectedItem
       selectedItem = I.items[selectedIndex]
 
-      selectedItem.select true
-      previouslySelectedItem?.select false
+      selectedItem.selected true
+      previouslySelectedItem?.selected false
 
       I.cursor = Point(selectedIndex.mod(columns()), (selectedIndex / columns()).floor())
 
@@ -53,6 +55,9 @@ Grid = (I={}) ->
 
     item.I.x = x + itemSize/10
     item.I.y = y + itemSize/10
+
+  if selectedItem = I.items.first()
+    selectedItem.selected true
 
   # We must always return self as the last line
   return self
