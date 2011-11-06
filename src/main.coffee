@@ -16,6 +16,8 @@ engine.add
   class: "Grid"
   items: launchableApps
 
+engine.start()
+
 chrome.management?.get appIds[0], ({icons}) ->
   icons.each (iconInfo) ->
     console.log iconInfo
