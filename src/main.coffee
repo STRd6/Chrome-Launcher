@@ -52,6 +52,6 @@ engine.bind "update", ->
   MAX_JOYSTICKS.times (i) ->
     controller = engine.controller(i)
 
-    if controller.justPressed "A", "START"
+    if controller.buttonPressed("A") or controller.buttonPressed("START")
       grid.trigger "launchApp"
 
