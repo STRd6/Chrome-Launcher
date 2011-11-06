@@ -2414,9 +2414,37 @@ Object.isObject = function(object) {
   @fieldOf Point
   @returns {Point} The point (0, 0)
   */
-  Point.ZERO = Point();
+  Point.ZERO = Point(0, 0);
+  /**
+  @name LEFT
+  @fieldOf Point
+  @returns {Point} The point (-1, 0)
+  */
+  Point.LEFT = Point(-1, 0);
+  /**
+  @name RIGHT
+  @fieldOf Point
+  @returns {Point} The point (1, 0)
+  */
+  Point.RIGHT = Point(1, 0);
+  /**
+  @name UP
+  @fieldOf Point
+  @returns {Point} The point (0, -1)
+  */
+  Point.UP = Point(0, -1);
+  /**
+  @name DOWN
+  @fieldOf Point
+  @returns {Point} The point (0, 1)
+  */
+  Point.DOWN = Point(0, 1);
   if (Object.freeze) {
     Object.freeze(Point.ZERO);
+    Object.freeze(Point.LEFT);
+    Object.freeze(Point.RIGHT);
+    Object.freeze(Point.UP);
+    Object.freeze(Point.DOWN);
   }
   return (typeof exports !== "undefined" && exports !== null ? exports : this)["Point"] = Point;
 })();;
@@ -6107,14 +6135,14 @@ Drawable = function(I, self) {
     });
   }
   self.bind('draw', function(canvas) {
-    var previousAlpha;
-    if (I.alpha && I.alpha !== 1) {
-      previousAlpha = I.alpha;
+    var previousAlpha, sprite;
+    if ((I.alpha != null) && I.alpha !== 1) {
+      previousAlpha = canvas.context().globalAlpha;
       canvas.context().globalAlpha = I.alpha;
     }
-    if (I.sprite) {
-      if (I.sprite.draw != null) {
-        I.sprite.draw(canvas, 0, 0);
+    if (sprite = I.sprite) {
+      if (sprite.draw != null) {
+        sprite.draw(canvas, -sprite.width / 2, -sprite.height / 2);
       } else {
         if (typeof warn === "function") {
           warn("Sprite has no draw method!");
@@ -6123,23 +6151,23 @@ Drawable = function(I, self) {
     } else {
       if (I.radius != null) {
         canvas.drawCircle({
-          x: I.width / 2,
-          y: I.height / 2,
+          x: 0,
+          y: 0,
           radius: I.radius,
           color: I.color
         });
       } else {
         canvas.drawRect({
-          x: 0,
-          y: 0,
+          x: -I.width / 2,
+          y: -I.height / 2,
           width: I.width,
           height: I.height,
           color: I.color
         });
       }
     }
-    if (I.alpha && I.alpha !== 1) {
-      return I.alpha = previousAlpha;
+    if ((I.alpha != null) && I.alpha !== 1) {
+      return canvas.context().globalAlpha = previousAlpha;
     }
   });
   return {
@@ -6179,7 +6207,6 @@ Drawable = function(I, self) {
       if (I.vflip) {
         transform = transform.concat(Matrix.VERTICAL_FLIP);
       }
-      transform = transform.concat(Matrix.translation(-I.width / 2, -I.height / 2));
       if (I.spriteOffset) {
         transform = transform.concat(Matrix.translation(I.spriteOffset.x, I.spriteOffset.y));
       }
@@ -7261,6 +7288,77 @@ Fadeable = function(I, self) {
   };
 };;
 /**
+The <code>Flickerable</code> module provides a method to flicker a sprite between solid and 50% opacity. 
+
+@name Flickerable
+@module
+@constructor
+@param {Object} I Instance variables
+@param {Core} self Reference to including object
+*/var Flickerable;
+Flickerable = function(I, self) {
+  var originalAlpha;
+  Object.reverseMerge(I, {
+    flickerAlpha: 0.5,
+    flickerDuration: 0,
+    flickerFrequency: 3
+  });
+  originalAlpha = I.alpha;
+  return {
+    before: {
+      draw: function(canvas) {
+        I.flickerDuration = I.flickerDuration.approach(0, 1);
+        if ((I.age % I.flickerFrequency === 0) && I.flickerDuration > 0) {
+          return I.alpha = I.flickerAlpha;
+        }
+      }
+    },
+    after: {
+      draw: function(canvas) {
+        return I.alpha = originalAlpha;
+      }
+    },
+    /**
+    A convenient way to set the flicker instance variables on a sprite. You can modify the
+    instance variables by hand but the suggested way to do it is through this method.
+
+    <code><pre>
+    player = GameObject()
+
+    player.include(Flickerable)
+
+    player.flicker()
+    # => This causes the sprite to flicker between full opacity 
+    # => and 50% opacity every 3 frames for 30 frames
+
+    player.flicker(90, 5, 0.3)
+    # => This causes the sprite to flicker between full opacity
+    # => and 30% opacity every 5 frames for 90 frames
+    </pre></code>
+
+    @name flicker
+    @methodOf Flickerable#
+    @param {Number} [duration=30] How long the effect lasts
+    @param {Number} [frequency=3] The number of frames in between opacity changes
+    @param {Number} [alpha=0.5] The alpha value to flicker to
+    */
+    flicker: function(duration, frequency, alpha) {
+      if (duration == null) {
+        duration = 30;
+      }
+      if (frequency == null) {
+        frequency = 3;
+      }
+      if (alpha == null) {
+        alpha = 0.5;
+      }
+      I.flickerDuration = duration;
+      I.flickerFrequency = frequency;
+      return I.flickerAlpha = alpha;
+    }
+  };
+};;
+/**
 The default base class for all objects you can add to the engine.
 
 GameObjects fire events that you may bind listeners to. Event listeners 
@@ -7754,77 +7852,6 @@ draw anything to the screen until the image has been loaded.
   };
   return (typeof exports !== "undefined" && exports !== null ? exports : this)["Sprite"] = Sprite;
 })();;
-/**
-The <code>Flickerable</code> module provides a method to flicker a sprite between solid and 50% opacity. 
-
-@name Flickerable
-@module
-@constructor
-@param {Object} I Instance variables
-@param {Core} self Reference to including object
-*/var Flickerable;
-Flickerable = function(I, self) {
-  var originalAlpha;
-  Object.reverseMerge(I, {
-    flickerAlpha: 0.5,
-    flickerDuration: 0,
-    flickerFrequency: 3
-  });
-  originalAlpha = I.alpha;
-  return {
-    before: {
-      draw: function(canvas) {
-        I.flickerDuration = I.flickerDuration.approach(0, 1);
-        if ((I.age % I.flickerFrequency === 0) && I.flickerDuration > 0) {
-          return I.alpha = I.flickerAlpha;
-        }
-      }
-    },
-    after: {
-      draw: function(canvas) {
-        return I.alpha = originalAlpha;
-      }
-    },
-    /**
-    A convenient way to set the flicker instance variables on a sprite. You can modify the
-    instance variables by hand but the suggested way to do it is through this method.
-
-    <code><pre>
-    player = GameObject()
-
-    player.include(Flickerable)
-
-    player.flicker()
-    # => This causes the sprite to flicker between full opacity 
-    # => and 50% opacity every 3 frames for 30 frames
-
-    player.flicker(90, 5, 0.3)
-    # => This causes the sprite to flicker between full opacity
-    # => and 30% opacity every 5 frames for 90 frames
-    </pre></code>
-
-    @name flicker
-    @methodOf Flickerable#
-    @param {Number} [duration=30] How long the effect lasts
-    @param {Number} [frequency=3] The number of frames in between opacity changes
-    @param {Number} [alpha=0.5] The alpha value to flicker to
-    */
-    flicker: function(duration, frequency, alpha) {
-      if (duration == null) {
-        duration = 30;
-      }
-      if (frequency == null) {
-        frequency = 3;
-      }
-      if (alpha == null) {
-        alpha = 0.5;
-      }
-      I.flickerDuration = duration;
-      I.flickerFrequency = frequency;
-      return I.flickerAlpha = alpha;
-    }
-  };
-};;
 ;
 ;
 ;
@@ -10385,17 +10412,157 @@ Framerate = function(options) {
 })();;
 ;
 ;
-;
+var Grid;
+Grid = function(I) {
+  var columns, previouslySelectedItem, rows, selectedItem, self;
+  if (I == null) {
+    I = {};
+  }
+  Object.reverseMerge(I, {
+    columns: 4,
+    height: App.height,
+    width: App.width,
+    x: 0,
+    y: 0,
+    color: "rgba(0, 128, 0, 0.5)",
+    cursor: Point(0, 0)
+  });
+  I.items || (I.items = []);
+  selectedItem = null;
+  previouslySelectedItem = null;
+  rows = function() {
+    return (I.items.length / I.columns).ceil();
+  };
+  columns = function() {
+    return I.columns;
+  };
+  self = GameObject(I);
+  self.unbind("draw");
+  self.bind("draw", function(canvas) {
+    return I.items.each(function(item) {
+      return item.draw(canvas);
+    });
+  });
+  self.bind("moveCursor", function(direction) {
+    var selectedIndex;
+    if (I.items.length) {
+      I.cursor = I.cursor.add(direction);
+      selectedIndex = Math.min(I.items.length - 1, I.cursor.x.mod(columns()) + I.cursor.y.mod(rows()) * I.columns);
+      previouslySelectedItem = selectedItem;
+      selectedItem = I.items[selectedIndex];
+      if (previouslySelectedItem != null) {
+        previouslySelectedItem.selected(false);
+      }
+      selectedItem.selected(true);
+      return I.cursor = Point(selectedIndex.mod(columns()), (selectedIndex / columns()).floor());
+    }
+  });
+  self.bind("launchApp", function() {
+    return selectedItem != null ? selectedItem.launch() : void 0;
+  });
+  I.items.each(function(item, i) {
+    var column, itemSize, row, x, y;
+    itemSize = I.width / I.columns;
+    column = i % I.columns;
+    row = (i / I.columns).floor();
+    x = column * itemSize;
+    y = row * itemSize;
+    item.I.x = x + itemSize / 10;
+    return item.I.y = y + itemSize / 10;
+  });
+  if (selectedItem = I.items.first()) {
+    selectedItem.selected(true);
+  }
+  return self;
+};;
+var LaunchableApp;
+LaunchableApp = function(I) {
+  var borderSize, self, _ref;
+  if (I == null) {
+    I = {};
+  }
+  Object.reverseMerge(I, {
+    color: "blue",
+    height: 128,
+    width: 128,
+    sprite: "test"
+  });
+  self = GameObject(I).extend({
+    launch: function() {
+      console.log("Launch: " + I.id);
+      return chrome.management.launchApp(I.id);
+    }
+  });
+  self.unbind("draw");
+  borderSize = 2;
+  self.bind("draw", function(canvas) {
+    if (I.selected) {
+      canvas.drawRoundRect({
+        x: -borderSize,
+        y: -borderSize,
+        width: I.width + 2 * borderSize,
+        height: I.height + 2 * borderSize,
+        radius: 2,
+        color: "red"
+      });
+    }
+    return I.sprite.draw(canvas, 0, 0);
+  });
+  if ((_ref = chrome.management) != null) {
+    _ref.get(I.id, function(_arg) {
+      var icon, icons;
+      icons = _arg.icons;
+      icons.sort(function(a, b) {
+        return b.size - a.size;
+      });
+      icon = icons.first();
+      return I.sprite = Sprite.fromURL(icon.url);
+    });
+  }
+  self.attrAccessor("selected");
+  return self;
+};;
 App.entities = {};;
-;$(function(){ var appIds;
-appIds = ["booheljepkdmiiennlkkbghacgnimbdn"];
-chrome.management.get(appIds[0], function(_arg) {
-  var icons;
-  icons = _arg.icons;
-  return icons.each(function(iconInfo) {
-    return console.log(iconInfo);
+;$(function(){ var MAX_JOYSTICKS, appIds, grid, launchableApps;
+MAX_JOYSTICKS = 8;
+appIds = ["booheljepkdmiiennlkkbghacgnimbdn", "booheljepkdmiiennlkkbghacgnimbdn", "booheljepkdmiiennlkkbghacgnimbdn", "booheljepkdmiiennlkkbghacgnimbdn", "booheljepkdmiiennlkkbghacgnimbdn", "booheljepkdmiiennlkkbghacgnimbdn"];
+window.engine = Engine({
+  backgroundColor: 'black',
+  canvas: $("canvas").pixieCanvas(),
+  includedModules: ["Joysticks"]
+});
+launchableApps = appIds.map(function(appId) {
+  return LaunchableApp({
+    id: appId
+  });
+});
+grid = engine.add({
+  "class": "Grid",
+  items: launchableApps
+});
+engine.start();
+["left", "right", "up", "down"].each(function(direction) {
+  var pointDirection;
+  pointDirection = Point[direction.toUpperCase()];
+  return $(document).bind("keydown", direction, function() {
+    return grid.trigger("moveCursor", pointDirection);
   });
 });
 $(document).bind("keydown", "return", function() {
-  return chrome.management.launchApp(appIds[0]);
+  return grid.trigger("launchApp");
+});
+MAX_JOYSTICKS.times(function(i) {
+  var controller;
+  return controller = engine.controller(i).bind("tap", function(pointDirection) {
+    return grid.trigger("moveCursor", pointDirection);
+  });
+});
+engine.bind("update", function() {
+  return MAX_JOYSTICKS.times(function(i) {
+    var controller;
+    controller = engine.controller(i);
+    if (controller.buttonPressed("A") || controller.buttonPressed("START")) {
+      return grid.trigger("launchApp");
+    }
+  });
 }); });
