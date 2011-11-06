@@ -2,14 +2,11 @@ MAX_JOYSTICKS = 8
 
 appIds = [
   "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
-  ""
-  ""
-  ""
-  ""
-  ""
-  ""
-  ""
-  ""
+  "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
+  "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
+  "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
+  "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
+  "booheljepkdmiiennlkkbghacgnimbdn" # Red Ice
 ]
 
 window.engine = Engine 
