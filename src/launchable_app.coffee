@@ -28,6 +28,14 @@ LaunchableApp = (I={}) ->
 
     I.sprite.draw(canvas, 0, 0)
 
+  # Load the app icon
+  chrome.management?.get I.id, ({icons}) ->
+    icons.sort (a, b) ->
+      b.size - a.size
+
+    icon = icons.first()
+
+    I.sprite = Sprite.fromURL icon.url
 
   self.attrAccessor "selected"
 
