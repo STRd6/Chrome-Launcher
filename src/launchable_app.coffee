@@ -7,7 +7,10 @@ LaunchableApp = (I={}) ->
     sprite: "test"
 
   # Inherit from game object
-  self = GameObject(I)
+  self = GameObject(I).extend
+    launch: ->
+      console.log "Launch: #{I.id}"
+      chrome.management.launchApp(I.id)
 
   self.unbind "draw"
 
