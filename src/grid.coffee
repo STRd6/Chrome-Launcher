@@ -4,8 +4,8 @@ Grid = (I={}) ->
     columns: 4
     height: App.height
     width: App.width
-    x: 0
-    y: 0
+    x: App.width/2
+    y: App.height/2
     color: "rgba(0, 128, 0, 0.5)"
 
   I.items ||= []
@@ -17,7 +17,11 @@ Grid = (I={}) ->
 
   self.bind "draw", (canvas) ->
     canvas.drawRect
-      I
+      x: 0
+      y: 0
+      width: I.width
+      height: I.height
+      color: I.color
 
     itemSize = I.width / I.columns
 
