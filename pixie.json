@@ -1,16 +1,1 @@
-{
-  "author": "STRd6",
-  "name": "Hockey",
-  "libs": {
-    "00_gamelib.js": "https://github.com/STRd6/gamelib/raw/pixie/gamelib.js",
-    "browserlib.js": "https://github.com/STRd6/browserlib/raw/pixie/browserlib.js",
-    "extralib.js": "https://github.com/STRd6/extralib/raw/pixie/extralib.js"
-  },
-  "directories": {
-    "lib": "lib",
-    "source": "src",
-    "test": "test"
-  },
-  "width": 1024,
-  "height": 768
-}
+{"author":"STRd6","name":"Chrome Launcher","libs":{"00_gamelib.js":"https://github.com/STRd6/gamelib/raw/pixie/gamelib.js","browserlib.js":"https://github.com/STRd6/browserlib/raw/pixie/browserlib.js","extralib.js":"https://github.com/STRd6/extralib/raw/pixie/extralib.js"},"directories":{"lib":"lib","source":"src","test":"test"},"width":640,"height":480}
