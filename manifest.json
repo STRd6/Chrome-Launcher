@@ -4,7 +4,10 @@
   "app": {
     "launch": {
       "local_path": "webstore/main.html"
-    }
+    },
+    "permissions": [
+      "management"
+    ]
   },
   "version": "0.0.1",
   "icons": {
