@@ -10,7 +10,7 @@ appIds = [
 ]
 
 window.engine = Engine 
-  backgroundColor: 'black'
+  clear: true
   canvas: $("canvas").pixieCanvas()
   includedModules: ["Joysticks"]
 
